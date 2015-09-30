@@ -16,15 +16,13 @@
 
 package com.databricks.spark.sql.perf.tpcds
 
-import java.io.File
-
-import scala.sys.process._
-
 import org.apache.spark.Logging
-import org.apache.spark.sql.{SaveMode, SQLContext}
-import org.apache.spark.sql.Row
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
+import org.apache.spark.sql.{Row, SQLContext, SaveMode}
+import org.apache.spark.sql.hive.HiveContext
+
+import scala.sys.process._
 
 class Tables(sqlContext: SQLContext, dsdgenDir: String, scaleFactor: Int) extends Serializable with Logging {
   import sqlContext.implicits._
@@ -128,16 +126,28 @@ class Tables(sqlContext: SQLContext, dsdgenDir: String, scaleFactor: Int) extend
             ""
           }
 
+          val distributeBy = if (sqlContext.isInstanceOf[HiveContext]){
+              s"""
+                 |DISTRIBUTE BY
+                 |$partitionColumnString
+               """.stripMargin
+          }else{
+              s"""
+                 |ORDER BY
+                 |$partitionColumnString
+               """.stripMargin
+          }
+
           val query =
             s"""
-              |SELECT
-              |  $columnString
-              |FROM
-              |  $tempTableName
-              |$predicates
-              |DISTRIBUTE BY
-              |  $partitionColumnString
-            """.stripMargin
+               |SELECT
+               |  $columnString
+               |FROM
+               |  $tempTableName
+               |$predicates
+               |$distributeBy
+              """.stripMargin
+          
           val grouped = sqlContext.sql(query)
           println(s"Pre-clustering with partitioning columns with query $query.")
           logInfo(s"Pre-clustering with partitioning columns with query $query.")

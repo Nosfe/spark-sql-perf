@@ -213,7 +213,7 @@ abstract class Benchmark(
 
       def scheduleCpuCollection(fs: FS) = {
         logCollection = () => {
-          currentMessages += s"Begining CPU log collection"
+          currentMessages += s"Beginning CPU log collection"
           try {
             val location = cpu.collectLogs(sqlContext, fs, timestamp)
             currentMessages += s"cpu results recorded to $location"
@@ -236,8 +236,8 @@ abstract class Benchmark(
       }
 
       /** Waits for the finish of the experiment. */
-      def waitForFinish(timeoutInSeconds: Int) = {
-        Await.result(resultsFuture, timeoutInSeconds.seconds)
+      def waitForFinish(duration: Duration) = {
+        Await.result(resultsFuture, duration)
       }
 
       /** Returns results from an actively running experiment. */
