@@ -179,7 +179,7 @@ abstract class Benchmark(
                 currentQuery = q.name
                 currentPlan = q.newDataFrame().queryExecution.executedPlan.toString
                 startTime = System.currentTimeMillis()
-
+                print(s"Starting " + q.name + "\n")
                 val singleResult = q.benchmark(includeBreakdown, setup, currentMessages)
                 singleResult.failure.foreach { f =>
                   failures += 1
@@ -188,6 +188,7 @@ abstract class Benchmark(
                 singleResult.executionTime.foreach(time =>
                   currentMessages += s"Exec time: ${time / 1000}s")
                 currentResults += singleResult
+                print(s"Finished " + q.name + "\n")
                 singleResult :: Nil
               })
             currentRuns += result

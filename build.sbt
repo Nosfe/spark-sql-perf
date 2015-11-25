@@ -8,7 +8,7 @@ sparkPackageName := "databricks/spark-sql-perf"
 // All Spark Packages need a license
 licenses := Seq("Apache-2.0" -> url("http://opensource.org/licenses/Apache-2.0"))
 
-sparkVersion := "1.4.1"
+sparkVersion := "1.5.0"
 
 sparkComponents ++= Seq("sql", "hive")
 
@@ -23,6 +23,7 @@ libraryDependencies += "com.twitter" %% "util-jvm" % "6.23.0" % "provided"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
 
+/*
 // Your username to login to Databricks Cloud
 dbcUsername := sys.env.getOrElse("DBC_USERNAME", sys.error("Please set DBC_USERNAME"))
 
@@ -66,3 +67,4 @@ releaseProcess := Seq[ReleaseStep](
   commitNextVersion,
   pushChanges
 )
+*/
